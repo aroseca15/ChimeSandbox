@@ -10,6 +10,14 @@
       "StackName": "amplify-chimesandbox-dev-141108",
       "StackId": "arn:aws:cloudformation:us-west-1:298725788099:stack/amplify-chimesandbox-dev-141108/935a29d0-3833-11ec-ab8a-06417fd15d17",
       "AmplifyAppId": "d3dfiumwpe81m5"
+    },
+    "categories": {
+      "function": {
+        "chimeSandboxLambda": {
+          "deploymentBucketName": "amplify-chimesandbox-dev-141108-deployment",
+          "s3Key": "amplify-builds/chimeSandboxLambda-3462685058364c323733-build.zip"
+        }
+      }
     }
   }
 }

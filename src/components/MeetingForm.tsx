@@ -25,9 +25,43 @@ const MeetingForm: FC = () => {
   }
 
 //Placeholder - we'll replace this function implementation later
-  const clickedJoinMeeting = async (event: FormEvent) => {
-    event.preventDefault();
-  };
+const clickedJoinMeeting = async (event: FormEvent) => {
+  event.preventDefault();
+
+  meetingManager.getAttendee = getAttendeeCallback();
+  const title = meetingTitle.trim().toLocaleLowerCase();
+  const name = attendeeName.trim();
+
+// Fetch the Meeting via AWS AppSync - if it exists, then the meeting has already
+// been created, and you just need to join it - you don't need to create a new meeting
+  const meetingResponse: any = await getMeetingFromDB(title);
+  const meetingJson = meetingResponse.data.getMeeting;
+  try {
+    if (meetingJson) {
+      const meetingData = JSON.parse(meetingJson.data);
+      const joinInfo = await joinMeeting(meetingData.MeetingId, name);
+      await addAttendeeToDB(joinInfo.Attendee.AttendeeId, name);
+
+      await meetingManager.join({
+        meetingInfo: meetingData,
+        attendeeInfo: joinInfo.Attendee
+      });
+    } else {
+      const joinInfo = await createMeeting(title, name, 'us-east-1');
+      await addMeetingToDB(title, joinInfo.Meeting.MeetingId, JSON.stringify(joinInfo.Meeting));       await addAttendeeToDB(joinInfo.Attendee.AttendeeId, name);
+
+      await meetingManager.join({
+        meetingInfo: joinInfo.Meeting,
+        attendeeInfo: joinInfo.Attendee
+      });
+    }
+  } catch (error) {
+    console.log(error);
+  }
+  
+  // At this point you can let users setup their devices, or start the session immediately
+  await meetingManager.start();
+};
 
   return (
     <form>

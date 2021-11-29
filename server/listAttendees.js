@@ -17,11 +17,13 @@ async function getMeetingAttendees(existingMeetingId) {
   });
 }
 
+// slice cuts the processes to get to the correct spot. Bring the process to what is needed to read the file for the meetingId. 
 var args = process.argv.slice(2);
 var meetingId = args[0];
 var fs = require('fs')
 
 try {
+  // reads meeting.txt file 
   meetingId = fs.readFileSync('meetingid.txt').toString('utf-8');
 }
 catch (err) {

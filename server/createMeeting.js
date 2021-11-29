@@ -6,7 +6,7 @@ chime.endpoint = new AWS.Endpoint('https://service.chime.aws.amazon.com');
 
 async function createNewMeeting() {
   const requestId = uuidv4();
-  const region = 'us-east-1'; // Media Region
+  const region = 'us-east-1'; // Media Region..... This can be any region that you need  
   try {
     // 12-17 create the meeting
     const meeting = await chime.createMeeting({

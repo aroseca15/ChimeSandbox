@@ -1,9 +1,10 @@
 const AWS = require('aws-sdk');
 const { v4: uuidv4 } = require('uuid');
-const chime = new AWS.Chime({ region: 'us-east-1' });
+const chime = new AWS.Chime({ region: 'us-east-1' }); //region for the control plane of the Amazon Chime API should always be ‘us-east-1’.
 const externalMeetingId = 'testMeeting';
 chime.endpoint = new AWS.Endpoint('https://service.chime.aws.amazon.com');
 
+// Lines 8-32 is a helper function that creates the meeting with attendees (up to 10).
 async function createNewMeeting(extMeetingId, attendees) {
     var params = {
         ClientRequestToken: uuidv4(),
@@ -13,12 +14,13 @@ async function createNewMeeting(extMeetingId, attendees) {
         MediaRegion: 'us-east-1',
     };
     try {
+        // creates the meeting
         const meeting = await chime.createMeetingWithAttendees(params).promise();
         console.log(meeting);
         const meetingId = meeting.Meeting.MeetingId; // meeting ID of the new meeting
         console.log('new meeting id: ' + meetingId);
 
-        // write the meeting id to a meetingid.txt
+        // 24-28 writes he most recent meeting ID to a file named meetingid.txt for other apps to use.
         var fs = require('fs');
         fs.writeFile('meetingid.txt', meetingId, function(err) {
             if (err) return console.log(err);
